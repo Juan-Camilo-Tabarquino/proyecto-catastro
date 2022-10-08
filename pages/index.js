@@ -1,8 +1,15 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { startCreatePredios } from '../Hooks/useListarPrediosStore'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
+
+  const onSubmit = async() => {
+    const res = await startCreatePredios()
+    console.log(res)
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -20,6 +27,8 @@ export default function Home() {
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
         </p>
+
+        <button onClick = {onSubmit}>Prueba</button>
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
