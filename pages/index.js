@@ -1,12 +1,14 @@
 import { MainLayout } from '../Components/Layouts/MainLayout'
-import { startCreatePredios } from '../Hooks/useListarPrediosStore'
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
+import { usePrediosStore }  from '../Hooks'
+import { useEffect } from 'react';
 
 const columns = [
+    { field: 'id', headerName: 'id', hide: true},
     { field: 'numero_predial', headerName: 'Numero Predial', flex: 1, with:60},
     { field: 'avaluo', headerName: 'Avaluo', flex: 1, minWidth: 200 },
     { field: 'nombre', headerName: 'Nombre', flex: 1, minWidth:120 },
@@ -25,13 +27,13 @@ const columns = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                onClick={handleUpdate(row)}
+                //onClick={handleUpdate(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                onClick={MensajeConfirmacion(row)}
+                //onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
@@ -39,17 +41,24 @@ const columns = [
     }
 ];
 
+
 export default function Home() {
 
+  const { predios, startListPredios } = usePrediosStore();
+
   const onSubmit = async() => {
-    const res = await startCreatePredios()
+    //const res = await startCreatePredios()
+    const res = await startListPredios()
     console.log(res)
   }
 
+  useEffect(() => {
+    startListPredios();
+  },[])
+
   return (
     <MainLayout>
-      <h1>Informacion Predios</h1>
-
+      <h1>Lista Predios</h1>
       <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>
@@ -57,7 +66,7 @@ export default function Home() {
                   headerHeight={56}
                   experimentalFeatures={{ lazyLoading: true }}
                   density='compact'
-                  rows={0}
+                  rows={predios}
                   columns={columns}
                   pageSize={8}
                   rowsPerPageOptions={[8]}

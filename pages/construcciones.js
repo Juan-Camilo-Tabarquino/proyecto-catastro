@@ -42,7 +42,7 @@ const columns = [
 export default function construcciones(){
     return (
         <MainLayout>
-            <h1> Informacion Construcciones </h1>
+            <h1> Lista Construcciones </h1>
             <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>
