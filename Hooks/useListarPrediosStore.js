@@ -39,7 +39,7 @@ export const startCreatePredios = async() => {
 
     const variables = {
         numero_predial : 1234456789, 
-        avaluo: 1234553549834, 
+        avaluo: 123452313, 
         nombre:"Prueba con front", 
         departamento: "valle del cauca", 
         municipio: "Palmira",
