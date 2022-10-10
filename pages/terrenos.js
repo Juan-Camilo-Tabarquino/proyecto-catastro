@@ -4,6 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
+import { useTerrenosStore } from '../Hooks';
+import { useEffect } from 'react';
 
 const columns = [
   { field: 'id', headerName: 'id', hide: true },
@@ -25,13 +27,13 @@ const columns = [
               icon={<EditIcon />}
               label="Edit"
               className="textPrimary"
-              onClick={handleUpdate(row)}
+              //onClick={handleUpdate(row)}
               color="inherit"
             />,
             <GridActionsCellItem
               icon={<DeleteIcon />}
               label="Delete"
-              onClick={MensajeConfirmacion(row)}
+              //onClick={MensajeConfirmacion(row)}
               color="inherit"
             />,
           ];
@@ -40,6 +42,13 @@ const columns = [
 ];
 
 export default function terrenos(){
+
+  const { terrenos ,startListTerrenos } = useTerrenosStore();
+
+  useEffect(()=>{
+    startListTerrenos();
+  },[])
+
     return (
       <MainLayout>
         <h1> Lista Terrenos </h1>
@@ -50,7 +59,7 @@ export default function terrenos(){
                   headerHeight={56}
                   experimentalFeatures={{ lazyLoading: true }}
                   density='compact'
-                  rows={0}
+                  rows={terrenos}
                   columns={columns}
                   pageSize={8}
                   rowsPerPageOptions={[8]}

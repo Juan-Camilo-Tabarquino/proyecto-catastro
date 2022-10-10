@@ -4,14 +4,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
+import { useConstruccionesStore } from '../Hooks';
+import { useEffect } from 'react';
 
 const columns = [
     { field: 'id', headerName: 'id', hide: true },
     { field: 'num_pisos', headerName: 'Numero de Pisos', flex: 1, minWidth: 200 },
-    { field: 'are', headerName: 'Area en M2', flex: 1, minWidth:120 },
+    { field: 'area', headerName: 'Area en M2', flex: 1, minWidth:120 },
     { field: 'direccion', headerName: 'Direccion', flex: 1,minWidth: 120 },
     { field: 'tipo', headerName: 'Tipo', flex: 1,minWidth: 120 },
-    { field: 'predioNumpredial', headerName: 'Numero predial', flex: 1,minWidth: 120 },
+    { field: 'predio', headerName: 'Numero predial', flex: 1,minWidth: 120 },
     {
       field: 'action',
       headerName: 'Acciones',
@@ -25,13 +27,13 @@ const columns = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                onClick={handleUpdate(row)}
+                //onClick={handleUpdate(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                onClick={MensajeConfirmacion(row)}
+                //onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
@@ -40,6 +42,13 @@ const columns = [
 ];
 
 export default function construcciones(){
+
+  const { construcciones, startListConstrucciones } = useConstruccionesStore();
+
+  useEffect(()=>{
+    startListConstrucciones();
+  },[])
+
     return (
         <MainLayout>
             <h1> Lista Construcciones </h1>
@@ -50,7 +59,7 @@ export default function construcciones(){
                   headerHeight={56}
                   experimentalFeatures={{ lazyLoading: true }}
                   density='compact'
-                  rows={0}
+                  rows={construcciones}
                   columns={columns}
                   pageSize={8}
                   rowsPerPageOptions={[8]}

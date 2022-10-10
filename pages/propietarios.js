@@ -4,6 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
+import { usePropietariosStore } from '../Hooks';
+import { useEffect } from 'react';
 
 const columns = [
     { field: 'id', headerName: 'id', hide: true },
@@ -14,7 +16,7 @@ const columns = [
     { field: 'numero_documento', headerName: 'Numero de Documento', flex: 1,minWidth: 120 },
     { field: 'nombre', headerName: 'Nombres', flex: 1,minWidth: 120 },
     { field: 'apellidos', headerName: 'Apellidos', flex: 1,minWidth: 120 },
-    { field: 'predioNumPredial', headerName: 'Numero Predial', flex: 1,minWidth: 120 },
+    { field: 'predio', headerName: 'Numero Predial', flex: 1,minWidth: 120 },
     {
       field: 'action',
       headerName: 'Acciones',
@@ -28,13 +30,13 @@ const columns = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                onClick={handleUpdate(row)}
+                //onClick={handleUpdate(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                onClick={MensajeConfirmacion(row)}
+                //onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
@@ -49,7 +51,7 @@ const columns2 = [
     { field: 'telefono', headerName: 'Telefono', flex: 1,minWidth: 120 },
     { field: 'nit', headerName: 'NIT', flex: 1,minWidth: 120 },
     { field: 'razon_social', headerName: 'Razon social', flex: 1,minWidth: 120 },
-    { field: 'predioNumPredial', headerName: 'Numero Predial', flex: 1,minWidth: 120 },
+    { field: 'predio', headerName: 'Numero Predial', flex: 1,minWidth: 120 },
     {
       field: 'action',
       headerName: 'Acciones',
@@ -63,13 +65,13 @@ const columns2 = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                onClick={handleUpdate(row)}
+                //onClick={handleUpdate(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                onClick={MensajeConfirmacion(row)}
+                //onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
@@ -78,6 +80,14 @@ const columns2 = [
 ];
 
 export default function propietarios(){
+
+  const { propietariosN, propietariosJ, startListProietariosN, startListProietariosJ } = usePropietariosStore();
+
+  useEffect(() => {
+    startListProietariosN();
+    startListProietariosJ();
+  },[])
+
     return (
         <MainLayout>
             <h1> Lista Propietarios (Personas Naturales) </h1>
@@ -88,7 +98,7 @@ export default function propietarios(){
                   headerHeight={56}
                   experimentalFeatures={{ lazyLoading: true }}
                   density='compact'
-                  rows={0}
+                  rows={propietariosN}
                   columns={columns}
                   pageSize={8}
                   rowsPerPageOptions={[8]}
@@ -105,7 +115,7 @@ export default function propietarios(){
                   headerHeight={56}
                   experimentalFeatures={{ lazyLoading: true }}
                   density='compact'
-                  rows={0}
+                  rows={propietariosJ}
                   columns={columns2}
                   pageSize={8}
                   rowsPerPageOptions={[8]}
