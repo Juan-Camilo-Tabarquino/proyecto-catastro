@@ -6,8 +6,35 @@ import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { usePropietariosStore } from '../Hooks';
 import { useEffect } from 'react';
+import { Button } from '@mui/material';
+import { SaveOutlined } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
-const columns = [
+export default function propietarios(){
+
+  const { propietariosN, propietariosJ, startListProietariosN, startListProietariosJ } = usePropietariosStore();
+
+  const router = useRouter();
+
+  const createPropietarioN = () =>{
+    router.push('/propietarios/naturales/create-naturales');
+  }
+
+  const createPropietarioJ = () =>{
+    router.push('/propietarios/juridicos/create-juridico');
+  }
+
+  const updatePropietarioN = () =>{
+    router.push('/propietarios/naturales/create-naturales');
+  }
+
+  const updatePropietarioJ = (row) => (e) =>{
+    e.preventDefault();
+    console.log(row)
+    router.push(`/propietarios/juridicos/${row.id}`);
+  }
+
+  const columns = [
     { field: 'id', headerName: 'id', hide: true },
     { field: 'direccion', headerName: 'Direccion', flex: 1, minWidth:120 },
     { field: 'email', headerName: 'Correo', flex: 1, minWidth: 200 },
@@ -65,7 +92,7 @@ const columns2 = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                //onClick={handleUpdate(row)}
+                onClick={updatePropietarioJ(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
@@ -79,9 +106,7 @@ const columns2 = [
     }
 ];
 
-export default function propietarios(){
 
-  const { propietariosN, propietariosJ, startListProietariosN, startListProietariosJ } = usePropietariosStore();
 
   useEffect(() => {
     startListProietariosN();
@@ -91,6 +116,14 @@ export default function propietarios(){
     return (
         <MainLayout>
             <h1> Lista Propietarios (Personas Naturales) </h1>
+            <Button
+            onClick={ createPropietarioN } 
+            color="primary" 
+            sx={{ padding: 2 }}
+            >
+                <SaveOutlined sx={{ fontSize: 30, mr: 1 }}/>
+                Crear Nuevo Propietario Natural
+            </Button>
             <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>
@@ -108,6 +141,14 @@ export default function propietarios(){
             </div>
             </div>
             <h1> Lista Propietarios (Personas Juridicas) </h1>
+            <Button
+            onClick={ createPropietarioJ } 
+            color="primary" 
+            sx={{ padding: 2 }}
+            >
+                <SaveOutlined sx={{ fontSize: 30, mr: 1 }}/>
+                Crear Nuevo Propietario Juridico
+            </Button>
             <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>
