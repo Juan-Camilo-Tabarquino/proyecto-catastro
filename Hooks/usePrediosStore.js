@@ -1,14 +1,15 @@
 import { gql } from "graphql-request";
+import { Router, useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { getClient } from "../GrapQL"
+import Swal from "sweetalert2";
+import { getClient } from "../GrapQL";
 import { onListPredios } from "../store";
 
 export const usePrediosStore = () => {
   
-    const { predios } = useSelector( state => state.predios )
-
+    const { predios } = useSelector( state => state.predios );
     const dispatch = useDispatch();
-
+    const router = useRouter();
     const startListPredios = async() => {
         const client = await getClient();
         const query = gql`
@@ -36,7 +37,7 @@ export const usePrediosStore = () => {
   
     };
     
-    const startCreatePredios = async() => {
+    const startCreatePredios = async({numero_predial,avaluo,nombre,departamento,municipio}) => {
         const client = await getClient();
         
         const mutation = gql`
@@ -68,14 +69,20 @@ export const usePrediosStore = () => {
         `;
     
         const variables = {
-            numero_predial : 1234456789, 
-            avaluo: 123452313, 
-            nombre:"Prueba con front", 
-            departamento: "valle del cauca", 
-            municipio: "Palmira",
+            numero_predial : parseInt(numero_predial), 
+            avaluo: parseInt(avaluo), 
+            nombre:nombre, 
+            departamento: departamento, 
+            municipio: municipio,
         }
-    
-        const data = await client.request(mutation, variables);      
+
+        try {
+            await client.request(mutation, variables);
+            Swal.fire('Creacion de predio','El nuevo predio se ha creado exitosamente.','success');
+            router.push('/');    
+        } catch (error) {
+            return console.log(error)
+        }
     };
 
     return {
