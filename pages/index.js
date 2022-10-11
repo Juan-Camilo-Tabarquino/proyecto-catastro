@@ -6,6 +6,9 @@ import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { usePrediosStore }  from '../Hooks'
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { Button } from '@mui/material';
+import { SaveOutlined } from '@mui/icons-material';
 
 const columns = [
     { field: 'id', headerName: 'id', hide: true},
@@ -45,11 +48,9 @@ const columns = [
 export default function Home() {
 
   const { predios, startListPredios } = usePrediosStore();
-
-  const onSubmit = async() => {
-    //const res = await startCreatePredios()
-    const res = await startListPredios()
-    console.log(res)
+  const router = useRouter();
+  const createPredio = async() => {
+    router.push('/predios/create-predio');
   }
 
   useEffect(() => {
@@ -59,6 +60,14 @@ export default function Home() {
   return (
     <MainLayout>
       <h1>Lista Predios</h1>
+      <Button
+            onClick={ createPredio } 
+            color="primary" 
+            sx={{ padding: 2 }}
+        >
+                <SaveOutlined sx={{ fontSize: 30, mr: 1 }}/>
+                Crear Nuevo Predio
+      </Button>
       <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>

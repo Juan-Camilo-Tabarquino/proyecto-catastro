@@ -6,6 +6,9 @@ import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { useConstruccionesStore } from '../Hooks';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { Button } from '@mui/material';
+import { SaveOutlined } from '@mui/icons-material';
 
 const columns = [
     { field: 'id', headerName: 'id', hide: true },
@@ -44,6 +47,11 @@ const columns = [
 export default function construcciones(){
 
   const { construcciones, startListConstrucciones } = useConstruccionesStore();
+  const router = useRouter();
+
+  const createConstruccion = () => {
+    router.push('/construcciones/create-construcciones');
+  }
 
   useEffect(()=>{
     startListConstrucciones();
@@ -52,6 +60,14 @@ export default function construcciones(){
     return (
         <MainLayout>
             <h1> Lista Construcciones </h1>
+            <Button
+            onClick={ createConstruccion } 
+            color="primary" 
+            sx={{ padding: 2 }}
+        >
+                <SaveOutlined sx={{ fontSize: 30, mr: 1 }}/>
+                Crear Nueva Construccion
+        </Button>
             <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>

@@ -1,7 +1,7 @@
 import { SaveOutlined } from '@mui/icons-material'
 import { Button, Grid, TextField, Typography } from '@mui/material'
-import Router from 'next/router'
 import React from 'react'
+import Swal from 'sweetalert2'
 import { MainLayout } from '../../Components/Layouts/MainLayout'
 import { useForm, usePrediosStore } from '../../Hooks'
 
@@ -23,10 +23,9 @@ export default function CreatePredio (){
         e.preventDefault();
         
         if( numero_predial < 0 || avaluo < 0 || nombre.trim() === '' || departamento.trim() === '' || municipio.trim() === ''){
-            console.log('Ingrese datos')
+            Swal.fire('Error','Todos los campos son requeridos para crear un predio.','error')
         }else{
             await startCreatePredios({numero_predial,avaluo,nombre,departamento,municipio})
-            console.log(numero_predial,avaluo,nombre,departamento,municipio);
         }
     }
 

@@ -6,6 +6,9 @@ import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { useTerrenosStore } from '../Hooks';
 import { useEffect } from 'react';
+import { Button } from '@mui/material';
+import { SaveOutlined } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 const columns = [
   { field: 'id', headerName: 'id', hide: true },
@@ -14,6 +17,7 @@ const columns = [
   { field: 'tipo', headerName: 'Tipo', flex: 1,minWidth: 120 },
   { field: 'construcciones', headerName: 'Construcciones', flex: 1,minWidth: 120 },
   { field: 'fuentes_agua', headerName: 'Fuentes de Agua', flex: 1,minWidth: 120 },
+  { field: 'predio', headerName: 'Numero Predial', flex: 1,minWidth: 120 },
   {
     field: 'action',
     headerName: 'Acciones',
@@ -44,6 +48,11 @@ const columns = [
 export default function terrenos(){
 
   const { terrenos ,startListTerrenos } = useTerrenosStore();
+  const router = useRouter();
+
+  const createTerreno = () => {
+    router.push('/terrenos/create-terrenos')
+  }
 
   useEffect(()=>{
     startListTerrenos();
@@ -52,6 +61,14 @@ export default function terrenos(){
     return (
       <MainLayout>
         <h1> Lista Terrenos </h1>
+        <Button
+            onClick={ createTerreno } 
+            color="primary" 
+            sx={{ padding: 2 }}
+        >
+                <SaveOutlined sx={{ fontSize: 30, mr: 1 }}/>
+                Crear Nuevo Terreno
+        </Button>
         <div style={{ height: 400, width: "100%" }}>
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ flexGrow: 1 }}>

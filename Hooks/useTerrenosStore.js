@@ -1,5 +1,7 @@
 import { gql } from "graphql-request";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { getClient } from "../GrapQL"
 import { onListTerrenos } from "../store";
 
@@ -7,7 +9,7 @@ import { onListTerrenos } from "../store";
 export const useTerrenosStore = () => {
   
     const { terrenos } = useSelector( state => state.terrenos )
-
+    const router = useRouter();
     const dispatch = useDispatch();
 
     const startListTerrenos = async() => {
@@ -32,53 +34,58 @@ export const useTerrenosStore = () => {
   
     };
     
-    // const startCreatePredios = async() => {
-    //     const client = await getClient();
+    const startCreateTerrenos = async({area,valor_comercial,tipo,construcciones, fuentes_agua, predio}) => {
+        const client = await getClient();
         
-    //     const mutation = gql`
+        const mutation = gql`
         
-    //     mutation create(
+        mutation create(
     
-    //             $numero_predial: Int!,
-    //             $avaluo: Int!,
-    //             $nombre: String!,
-    //             $departamento: String!,
-    //             $municipio: String!
+                $area: Int!,
+                $valor_comercial: Int!,
+                $tipo: String!,
+                $construcciones: String!,
+                $fuentes_agua: String!,
+                $predio: Int!,
             
-    //         ) {
-    //             createPredio(
-    //                 numero_predial: $numero_predial,
-    //                 avaluo: $avaluo,
-    //                 nombre: $nombre,
-    //                 departamento: $departamento,
-    //                 municipio: $municipio
-    //         ) {
-    //             numero_predial,
-    //             avaluo,
-    //             nombre,
-    //             departamento,
-    //             municipio
-    //         }
-    //         }
+            ) {
+                createTerreno(
+                    area: $area,
+                    valor_comercial:$valor_comercial,
+                    tipo: $tipo,
+                    construcciones: $construcciones,
+                    fuentes_agua: $fuentes_agua,
+                    predio: $predio,
+            ) {
+                id,
+                predio
+            }
+            }
     
-    //     `;
+        `;
     
-    //     const variables = {
-    //         numero_predial : 1234456789, 
-    //         avaluo: 123452313, 
-    //         nombre:"Prueba con front", 
-    //         departamento: "valle del cauca", 
-    //         municipio: "Palmira",
-    //     }
-    
-    //     const data = await client.request(mutation, variables);      
-    // };
+        const variables = {
+            area: parseInt(area),
+            valor_comercial: parseInt(valor_comercial),
+            tipo: tipo,
+            construcciones: construcciones,
+            fuentes_agua: fuentes_agua,
+            predio: parseInt(predio),
+        }
+        try {
+            await client.request(mutation, variables);      
+            Swal.fire('Creacion de terreno','El nuevo terreno se ha creado exitosamente.','success');
+            router.push('/terrenos');   
+        } catch (error) {
+            return Swal.fire('Error','Error en la creacion del terrenos, asegurese de que el predio no tiene otro terreno asociado.','error');
+        }
+    };
 
     return {
 
         terrenos,
 
-        //startCreatePredios,
+        startCreateTerrenos,
         startListTerrenos,
     };
 
