@@ -81,12 +81,84 @@ export const useTerrenosStore = () => {
         }
     };
 
+    const startUpdateTerrenos = async({id,area,valor_comercial,construcciones, fuentes_agua, predio}) => {
+        const client = await getClient();
+        
+        const mutation = gql`
+        
+        mutation create(
+
+                $id : Int!,
+                $area: Int!,
+                $valor_comercial: Int!,
+                $construcciones: String!,
+                $fuentes_agua: String!,
+            
+            ) {
+                updateTerreno(
+                    id: $id,
+                    area: $area,
+                    valor_comercial:$valor_comercial,
+                    construcciones: $construcciones,
+                    fuentes_agua: $fuentes_agua,
+            ) {
+                message
+            }
+            }
+    
+        `;
+    
+        const variables = {
+            id: parseInt(id),
+            area: parseInt(area),
+            valor_comercial: parseInt(valor_comercial),
+            construcciones: construcciones,
+            fuentes_agua: fuentes_agua,
+        }
+        try {
+            await client.request(mutation, variables);      
+            Swal.fire('Actualizacion de terreno','El terreno se ha actualizado exitosamente.','success');
+            router.push('/terrenos');   
+        } catch (error) {
+            console.log(error);
+            return Swal.fire('Error','Error en la creacion del terrenos','error');
+        }
+    }
+
+    const startDeleteTerreno = async({id}) => {
+        const client = await getClient();
+
+        const mutation = gql`
+        
+        mutation create(
+                $id: Int!,     
+            ) {
+                deleteTerreno(
+                    id: $id,
+                )
+            }
+    
+        `;
+    
+        const variables = {
+            id: parseInt(id),
+        }
+
+        try {
+            await client.request(mutation, variables);
+        } catch (error) {
+            return console.log(error)
+        }        
+    }
+
     return {
 
         terrenos,
 
         startCreateTerrenos,
         startListTerrenos,
+        startUpdateTerrenos,
+        startDeleteTerreno,
     };
 
 };

@@ -43,7 +43,7 @@ export default function propietarios(){
     setId(row.id);
     Swal.fire({
       title: "¿Estás seguro?",
-      text: "Estás por borrar un proyecto, este no se podrá recuperar más adelante.",
+      text: "¿Seguro que desea eliminar el propietario?",
       icon: "error",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
@@ -151,8 +151,6 @@ const columns2 = [
   },[])
 
     return (
-      <>
-
         <MainLayout>
             <h1> Lista Propietarios (Personas Naturales) </h1>
             <Button
@@ -208,6 +206,5 @@ const columns2 = [
 
 
         </MainLayout>
-      </>
       )
 }
