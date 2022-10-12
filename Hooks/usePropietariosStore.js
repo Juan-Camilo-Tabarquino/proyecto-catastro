@@ -215,6 +215,91 @@ export const usePropietariosStore = () => {
         }      
     }
 
+    const startUpdatePropietarioN = async({id,direccion,telefono,email,tipo_documento,numero_documento,nombre,apellidos,predio}) => {
+        const client = await getClient();
+
+        const mutation = gql`
+        
+        mutation create(
+    
+                $id: Int!,
+                $telefono: Int!,
+                $email: String!,
+                $direccion: String!,
+                $tipo_documento: String!,
+                $numero_documento: Int!,
+                $nombre: String!,
+                $apellidos: String!,
+                $predio: Int!
+            
+            ) {
+                updatePropietario(
+                    id: $id,
+                    telefono: $telefono,
+                    email: $email,
+                    direccion: $direccion
+                    tipo_documento: $tipo_documento,
+                    numero_documento: $numero_documento,
+                    nombre: $nombre,
+                    apellidos: $apellidos,
+                    predio: $predio
+            ) {
+               success,
+               message,
+            }
+            }
+    
+        `;
+    
+        const variables = {
+            id: id,
+            direccion: direccion,
+            telefono: parseInt(telefono),
+            email: email,
+            tipo_documento: tipo_documento,
+            numero_documento: parseInt(numero_documento),
+            nombre: nombre,
+            apellidos:apellidos,
+            predio: parseInt(predio),
+        }
+
+        try {
+            await client.request(mutation, variables);
+            Swal.fire('Actualizacion del propietario','El propietario se ha actualizado exitosamente.','success');
+            router.push('/propietarios');    
+        } catch (error) {
+            return console.log(error)
+        }        
+    };
+
+    const startDeletePropietario = async({id}) => {
+        const client = await getClient();
+
+        const mutation = gql`
+        
+        mutation create(
+                $id: Int!,     
+            ) {
+                deletePropietario(
+                    id: $id,
+            )
+            }
+    
+        `;
+    
+        const variables = {
+            id: parseInt(id),
+        }
+
+        try {
+            await client.request(mutation, variables);
+            Swal.fire('Actualizacion del propietario','El propietario se ha actualizado exitosamente.','success');
+            router.push('/propietarios');    
+        } catch (error) {
+            return console.log(error)
+        }        
+    }
+
     return {
 
         propietariosJ,
@@ -224,6 +309,8 @@ export const usePropietariosStore = () => {
         startCreatePropietarioNatural,
         startCreatePropietarioJuridico,
         startUpdatePropietarioJ,
+        startUpdatePropietarioN,
+        startDeletePropietario,
 
     };
 

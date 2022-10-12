@@ -5,14 +5,16 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { usePropietariosStore } from '../Hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { SaveOutlined } from '@mui/icons-material';
 import { useRouter } from 'next/router';
+import { Modal } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 export default function propietarios(){
 
-  const { propietariosN, propietariosJ, startListProietariosN, startListProietariosJ } = usePropietariosStore();
+  const { propietariosN, propietariosJ, startListProietariosN, startListProietariosJ, startDeletePropietario } = usePropietariosStore();
 
   const router = useRouter();
 
@@ -24,15 +26,50 @@ export default function propietarios(){
     router.push('/propietarios/juridicos/create-juridico');
   }
 
-  const updatePropietarioN = () =>{
-    router.push('/propietarios/naturales/create-naturales');
+  const updatePropietarioN = (row) => (e) =>{
+    e.preventDefault();
+    router.push(`/propietarios/naturales/${row.id}`);
   }
 
   const updatePropietarioJ = (row) => (e) =>{
     e.preventDefault();
-    console.log(row)
     router.push(`/propietarios/juridicos/${row.id}`);
   }
+
+  const [id, setId] = useState();
+    
+  const MensajeConfirmacion = (row) => (e)=>{
+    e.preventDefault();
+    setId(row.id);
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Estás por borrar un proyecto, este no se podrá recuperar más adelante.",
+      icon: "error",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Confirmar",
+      }).then(async(res) => {
+        try {
+          await startDeletePropietario({id});
+          Swal.fire('Eliminacion exitosa','se ha borrando exitosamente el propietario','success')  
+        } catch (error) {
+          Swal.fire('Ha ocuurido un errir','No se ha borrando exitosamente el propietario, intentelo mas tarde','error')  
+        }
+      });
+  }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   const columns = [
     { field: 'id', headerName: 'id', hide: true },
@@ -57,13 +94,13 @@ export default function propietarios(){
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                //onClick={handleUpdate(row)}
+                onClick={updatePropietarioN(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                //onClick={MensajeConfirmacion(row)}
+                onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
@@ -98,7 +135,7 @@ const columns2 = [
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                //onClick={MensajeConfirmacion(row)}
+                onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
@@ -114,6 +151,8 @@ const columns2 = [
   },[])
 
     return (
+      <>
+
         <MainLayout>
             <h1> Lista Propietarios (Personas Naturales) </h1>
             <Button
@@ -165,6 +204,10 @@ const columns2 = [
               </div>
             </div>
             </div>
+
+
+
         </MainLayout>
+      </>
       )
 }
