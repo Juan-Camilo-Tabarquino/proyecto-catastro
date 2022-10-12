@@ -78,12 +78,84 @@ export const useConstruccionesStore = () => {
         }  
     };
 
+    const startUpadteConstruccion = async({id,num_pisos,area, direccion, tipo}) => {
+        const client = await getClient();
+        
+        const mutation = gql`
+        
+        mutation create(
+    
+                $num_pisos: Int!,
+                $area: Int!,
+                $direccion: String!,
+                $tipo: String!,
+                $id: Int!
+            
+            ) {
+                updateConstruccion(
+                    num_pisos: $num_pisos,
+                    area: $area,
+                    direccion: $direccion,
+                    tipo: $tipo,
+                    id: $id
+            ) {
+                message,
+            }
+            }
+    
+        `;
+    
+        const variables = {
+            num_pisos : parseInt(num_pisos), 
+            area: parseInt(area), 
+            direccion:direccion, 
+            tipo: tipo, 
+            id: parseInt(id),
+        }
+
+        try {
+            await client.request(mutation, variables);      
+            Swal.fire('Actualizacion de la construccion','La construccion se ha actualizado exitosamente.','success');
+            router.push('/construcciones');   
+        } catch (error) {
+            console.log(error)
+        }  
+    };
+
+    const startDeleteConstruccion = async({id}) => {
+        const client = await getClient();
+
+        const mutation = gql`
+        
+        mutation create(
+                $id: Int!,     
+            ) {
+                deleteConstruccion(
+                    id: $id,
+                )
+            }
+    
+        `;
+    
+        const variables = {
+            id: parseInt(id),
+        }
+
+        try {
+            await client.request(mutation, variables);
+        } catch (error) {
+            return console.log(error)
+        }        
+    }
+
     return {
 
         construcciones,
 
         startCreateConstruccion,
         startListConstrucciones,
+        startUpadteConstruccion,
+        startDeleteConstruccion,
     };
 
 };

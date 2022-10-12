@@ -5,12 +5,50 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { useConstruccionesStore } from '../Hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import { SaveOutlined } from '@mui/icons-material';
+import Swal from 'sweetalert2';
 
-const columns = [
+export default function construcciones(){
+
+  const { construcciones, startListConstrucciones, startDeleteConstruccion } = useConstruccionesStore();
+  const router = useRouter();
+
+  const createConstruccion = () => {
+    router.push('/construcciones/create-construcciones');
+  }
+
+  const updateConstruccion = (row) => (e) => {
+    e.preventDefault();
+    router.push(`/construcciones/${row.id}`);
+  }
+
+  const [id, setId] = useState();
+
+  const MensajeConfirmacion = (row) => (e)=>{
+    e.preventDefault();
+    setId(row.id);
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¿Seguro que desea eleminar el terreno?",
+      icon: "error",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Confirmar",
+      }).then((res) => {
+        try {
+          if(startDeleteConstruccion({id})) Swal.fire('Eliminacion exitosa','se ha borrando exitosamente el propietario','success');
+          return
+        } catch (error) {
+          Swal.fire('Ha ocuurido un errir','No se ha borrando exitosamente el propietario, intentelo mas tarde','error')  
+        }
+      });
+  }
+
+  const columns = [
     { field: 'id', headerName: 'id', hide: true },
     { field: 'num_pisos', headerName: 'Numero de Pisos', flex: 1, minWidth: 200 },
     { field: 'area', headerName: 'Area en M2', flex: 1, minWidth:120 },
@@ -30,28 +68,19 @@ const columns = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                //onClick={handleUpdate(row)}
+                onClick={updateConstruccion(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                //onClick={MensajeConfirmacion(row)}
+                onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
         }
     }
 ];
-
-export default function construcciones(){
-
-  const { construcciones, startListConstrucciones } = useConstruccionesStore();
-  const router = useRouter();
-
-  const createConstruccion = () => {
-    router.push('/construcciones/create-construcciones');
-  }
 
   useEffect(()=>{
     startListConstrucciones();

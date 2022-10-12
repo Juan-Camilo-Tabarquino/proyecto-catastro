@@ -4,27 +4,28 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { MainLayout } from '../../Components/Layouts/MainLayout'
-import { useForm, usePrediosStore, useTerrenosStore } from '../../Hooks'
+import { useConstruccionesStore, useForm, usePrediosStore, useTerrenosStore } from '../../Hooks'
 
-export default function CreateTerrenos (){
+export default function CreateConstrucciones (){
+
     const router = useRouter();
-    const { terrenos ,startUpdateTerrenos, startListTerrenos } = useTerrenosStore();
-    const terrenoActual = terrenos.find(terreno => terreno.id === router.query.id)
-    const { area, valor_comercial, tipo, construcciones, fuentes_agua, predio, onInputChange} = useForm(terrenoActual);
+    const { construcciones ,startUpadteConstruccion, startListConstrucciones } = useConstruccionesStore();
+    const construccionActual = construcciones.find(construccion => construccion.id === router.query.id)
+    const { num_pisos, area, direccion, tipo, onInputChange} = useForm(construccionActual);
     const { predios,startListPredios } = usePrediosStore();
     
     const onSubmit = async(e) => {
         e.preventDefault();
-        if( area < 0 || valor_comercial < 0 || tipo.trim() === '' || construcciones.trim() === '' || fuentes_agua.trim() === '' || predio === 0 || predio === ""){
+        if( area < 0 || num_pisos < 1 || tipo.trim() === '' || direccion.trim() === ''){
             Swal.fire('Error','Todos los campos son requeridos para crear un terreno.','error')
         }else{
             const id = router.query.id;
-            await startUpdateTerrenos({id,area,valor_comercial,construcciones, fuentes_agua})
+            await startUpadteConstruccion({id,num_pisos,area, direccion, tipo})
         }
     }
 
     useEffect(() => {
-        startListTerrenos();
+     startListConstrucciones();
      startListPredios();
     },[])
 
@@ -41,7 +42,7 @@ export default function CreateTerrenos (){
         }}
     >
         <Grid item>
-            <Typography fontSize={ 39 } fontWeight="ligth"> Actualizar Terreno </Typography>
+            <Typography fontSize={ 39 } fontWeight="ligth"> Crear nueva Construccion </Typography>
         </Grid>
         <Grid item>
             <Button
@@ -58,9 +59,20 @@ export default function CreateTerrenos (){
                 type="text"
                 variant="filled"
                 fullWidth
-                placeholder="Ingrese el numero predial"
-                label="Area del Terreno en M2"
+                placeholder="Ingrese el numero de pisos de la construccion"
+                label="Numero de Pisos"
                 sx={{ border: 'none', mb: 1}}
+                name="num_pisos"
+                value={ num_pisos }
+                onChange={ onInputChange }
+            />
+
+            <TextField
+                type="text"
+                variant="filled"
+                fullWidth
+                placeholder="Ingrese el area de la construccion"
+                label="Area en M2"
                 name="area"
                 value={ area }
                 onChange={ onInputChange }
@@ -70,10 +82,10 @@ export default function CreateTerrenos (){
                 type="text"
                 variant="filled"
                 fullWidth
-                placeholder="Ingrese el avaluo del predio"
-                label="Valor Comercial"
-                name="valor_comercial"
-                value={ valor_comercial }
+                placeholder="Ingrese la direccion"
+                label="Direccion de la construccion"
+                name="direccion"
+                value={ direccion }
                 onChange={ onInputChange }
             />
 
@@ -81,21 +93,10 @@ export default function CreateTerrenos (){
                 type="text"
                 variant="filled"
                 fullWidth
-                placeholder="Ingrese el departamento"
-                label="Posee construciones"
-                name="construcciones"
-                value={ construcciones }
-                onChange={ onInputChange }
-            />
-
-            <TextField
-                type="text"
-                variant="filled"
-                fullWidth
-                placeholder="Ingrese el municipio"
-                label="Posee fuentes de agua cerca"
-                name="fuentes_agua"
-                value={ fuentes_agua }
+                placeholder="Ingrese el tipo de la construccion"
+                label="Tipo"
+                name="tipo"
+                value={ tipo }
                 onChange={ onInputChange }
             />
         </Grid>
