@@ -42,7 +42,7 @@ export default function CreateConstrucciones (){
         }}
     >
         <Grid item>
-            <Typography fontSize={ 39 } fontWeight="ligth"> Crear nueva Construccion </Typography>
+            <Typography fontSize={ 39 } fontWeight="ligth"> Actualizar Construccion </Typography>
         </Grid>
         <Grid item>
             <Button

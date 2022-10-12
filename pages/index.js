@@ -5,12 +5,50 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { localText } from '../translate';
 import { usePrediosStore }  from '../Hooks'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import { SaveOutlined } from '@mui/icons-material';
+import Swal from 'sweetalert2';
 
-const columns = [
+
+export default function Home() {
+
+  const { predios, startListPredios, startDeletePredio } = usePrediosStore();
+  const router = useRouter();
+  const createPredio = async() => {
+    router.push('/predios/create-predio');
+  }
+
+  const updatePredio = (row) => (e) => {
+    e.preventDefault();
+    router.push(`/predios/${row.id}`)
+  }
+
+  const [id, setId] = useState();
+    
+  const MensajeConfirmacion = (row) => (e)=>{
+    e.preventDefault();
+    setId(row.id);
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¿Seguro que desea eleminar el terreno?",
+      icon: "error",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Confirmar",
+      }).then((res) => {
+        try {
+          startDeletePredio({id});
+          Swal.fire('Eliminacion exitosa','se ha borrando exitosamente el propietario','success')  
+        } catch (error) {
+          Swal.fire('Ha ocuurido un errir','No se ha borrando exitosamente el propietario, intentelo mas tarde','error')  
+        }
+      });
+  }
+
+  const columns = [
     { field: 'id', headerName: 'id', hide: true},
     { field: 'numero_predial', headerName: 'Numero Predial', flex: 1, with:60},
     { field: 'avaluo', headerName: 'Avaluo', flex: 1, minWidth: 200 },
@@ -30,28 +68,19 @@ const columns = [
                 icon={<EditIcon />}
                 label="Edit"
                 className="textPrimary"
-                //onClick={handleUpdate(row)}
+                onClick={updatePredio(row)}
                 color="inherit"
               />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}
                 label="Delete"
-                //onClick={MensajeConfirmacion(row)}
+                onClick={MensajeConfirmacion(row)}
                 color="inherit"
               />,
             ];
         }
     }
 ];
-
-
-export default function Home() {
-
-  const { predios, startListPredios } = usePrediosStore();
-  const router = useRouter();
-  const createPredio = async() => {
-    router.push('/predios/create-predio');
-  }
 
   useEffect(() => {
     startListPredios();

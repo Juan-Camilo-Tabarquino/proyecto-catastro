@@ -54,7 +54,7 @@ export default function CreatePropietarioNatural (){
         }}
     >
         <Grid item>
-            <Typography fontSize={ 39 } fontWeight="ligth"> Crear nuevo Propietario Natural </Typography>
+            <Typography fontSize={ 39 } fontWeight="ligth"> Actualizar Propietario Natural </Typography>
         </Grid>
         <Grid item>
             <Button

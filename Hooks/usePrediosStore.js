@@ -85,12 +85,78 @@ export const usePrediosStore = () => {
         }
     };
 
+    const startUpdatePredio = async({id,avaluo,nombre}) => {
+        const client = await getClient();
+        
+        const mutation = gql`
+        
+        mutation create(
+    
+                $id: Int!,
+                $avaluo: Int!,
+                $nombre: String!,
+            ) {
+                updatePredio(
+                    numero_predial: $id,
+                    avaluo: $avaluo,
+                    nombre: $nombre,
+            ) {
+               success,
+               message
+            }
+            }
+    
+        `;
+    
+        const variables = {
+            id : parseInt(id), 
+            avaluo: parseInt(avaluo), 
+            nombre:nombre, 
+        }
+
+        try {
+            await client.request(mutation, variables);
+            Swal.fire('Actualizacion de predio','El predio se ha actualizado exitosamente.','success');
+            router.push('/');    
+        } catch (error) {
+            return console.log(error)
+        }
+    };
+
+    const startDeletePredio = async({id}) => {
+        const client = await getClient();
+
+        const mutation = gql`
+        
+        mutation create(
+                $id: Int!,     
+            ) {
+                deletePredio(
+                    numero_predial: $id,
+                )
+            }
+    
+        `;
+    
+        const variables = {
+            id: parseInt(id),
+        }
+
+        try {
+            await client.request(mutation, variables);
+        } catch (error) {
+            return console.log(error)
+        }        
+    }
+
     return {
 
         predios,
 
         startCreatePredios,
         startListPredios,
+        startUpdatePredio,
+        startDeletePredio
     };
 
 };
